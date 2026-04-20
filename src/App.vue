@@ -49,15 +49,10 @@ function cancelAdd() {
 
 async function copyUrl() {
   const url = window.location.href
-  if (navigator.clipboard?.writeText) {
+  try {
     await navigator.clipboard.writeText(url)
-  } else {
-    const el = document.createElement('input')
-    el.value = url
-    document.body.appendChild(el)
-    el.select()
-    document.execCommand('copy')
-    document.body.removeChild(el)
+  } catch {
+    // Clipboard API unavailable — URL is visible in address bar
   }
   copied.value = true
   setTimeout(() => (copied.value = false), 2000)
@@ -65,78 +60,82 @@ async function copyUrl() {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 overflow-hidden">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-violet-600 text-white px-4 py-2 rounded-lg z-50 text-sm font-medium">
+  <div class="h-screen flex flex-col bg-cream overflow-hidden">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-terra text-white px-4 py-2 rounded-lg z-50 text-sm font-medium">
       Skip to content
     </a>
 
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 flex-shrink-0 z-10">
-      <div class="px-4 py-4 flex items-center justify-between gap-4">
-        <div>
-          <h1 class="text-xl font-bold text-violet-700 tracking-tight leading-none">PocketWish</h1>
-          <p class="text-xs text-gray-500 mt-1">Share your wishlists via URL</p>
-        </div>
+    <header class="bg-cream border-b border-cream-border flex-shrink-0 z-10">
+      <div class="px-5 py-3 flex items-center justify-between gap-4">
+        <h1 class="font-display text-2xl font-semibold text-ink tracking-tight leading-none">
+          <span class="text-terra" aria-hidden="true">✦</span>&#8201;PocketWish
+        </h1>
 
         <div class="flex items-center gap-2">
           <!-- Settings -->
           <div class="relative">
             <button
               @click="showSettings = !showSettings"
-              class="p-2 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+              class="p-2 text-ink-subtle hover:text-ink-muted rounded-lg hover:bg-cream-muted transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terra"
               aria-label="Settings"
               :aria-expanded="showSettings"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </button>
 
-            <!-- Transparent overlay to close settings -->
             <div v-if="showSettings" @click="showSettings = false" class="fixed inset-0 z-10" aria-hidden="true" />
 
-            <!-- Settings dropdown -->
             <div
               v-if="showSettings"
-              class="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg p-4 w-56 z-20 space-y-4"
+              class="absolute right-0 top-full mt-2 bg-cream border border-cream-border rounded-2xl shadow-lg p-4 w-56 z-20 space-y-4"
               role="dialog"
               aria-label="Feature settings"
             >
-              <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Features</p>
+              <p class="text-[10px] font-semibold text-ink-subtle uppercase tracking-widest">Features</p>
 
               <div class="flex items-center justify-between gap-3">
-                <label for="feature-links" class="text-sm text-gray-700 cursor-pointer select-none">Links</label>
+                <label for="feature-links" class="text-sm text-ink-muted cursor-pointer select-none">Links</label>
                 <button
                   id="feature-links"
                   role="switch"
                   :aria-checked="features.links"
                   @click="features.links = !features.links"
-                  class="relative inline-flex h-6 w-10 flex-shrink-0 items-center rounded-full transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
-                  :class="features.links ? 'bg-violet-600' : 'bg-gray-200'"
+                  class="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-terra"
+                  :class="features.links ? 'bg-terra' : 'bg-cream-border'"
                 >
                   <span
-                    class="inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-150"
-                    :class="features.links ? 'translate-x-5' : 'translate-x-1'"
+                    class="inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200"
+                    :class="features.links ? 'translate-x-4' : 'translate-x-0.5'"
                   />
                 </button>
               </div>
 
               <div class="flex items-center justify-between gap-3">
-                <label for="feature-priority" class="text-sm text-gray-700 cursor-pointer select-none">Priority</label>
+                <label for="feature-priority" class="text-sm text-ink-muted cursor-pointer select-none">Priority</label>
                 <button
                   id="feature-priority"
                   role="switch"
                   :aria-checked="features.priority"
                   @click="features.priority = !features.priority"
-                  class="relative inline-flex h-6 w-10 flex-shrink-0 items-center rounded-full transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
-                  :class="features.priority ? 'bg-violet-600' : 'bg-gray-200'"
+                  class="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-terra"
+                  :class="features.priority ? 'bg-terra' : 'bg-cream-border'"
                 >
                   <span
-                    class="inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-150"
-                    :class="features.priority ? 'translate-x-5' : 'translate-x-1'"
+                    class="inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200"
+                    :class="features.priority ? 'translate-x-4' : 'translate-x-0.5'"
                   />
                 </button>
+              </div>
+
+              <div v-if="features.links || features.priority" class="flex items-start gap-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-xs text-amber-700 leading-snug">These options increase the size of the shared URL.</p>
               </div>
             </div>
           </div>
@@ -145,18 +144,19 @@ async function copyUrl() {
           <button
             v-if="wishlists.length > 0"
             @click="copyUrl"
-            class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-violet-50 text-violet-700 hover:bg-violet-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 flex-shrink-0"
+            class="flex items-center gap-1.5 text-sm px-4 py-2 rounded-full font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-terra flex-shrink-0"
+            :class="copied ? 'bg-emerald-500 text-white' : 'bg-terra text-white hover:bg-terra-deep'"
             :aria-label="copied ? 'Link copied to clipboard' : 'Copy share link'"
-            :aria-live="copied ? 'polite' : undefined"
           >
-            <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
             <span>{{ copied ? 'Copied!' : 'Share' }}</span>
           </button>
+          <span class="sr-only" aria-live="polite" aria-atomic="true">{{ copied ? 'Link copied to clipboard' : '' }}</span>
         </div>
       </div>
     </header>
@@ -165,13 +165,13 @@ async function copyUrl() {
     <main id="main-content" class="flex-1 flex overflow-hidden">
 
       <!-- Mobile layout -->
-      <div class="flex-1 overflow-y-auto md:hidden">
+      <div class="flex-1 overflow-y-auto md:hidden bg-cream">
         <div class="max-w-2xl mx-auto px-4 py-6">
           <!-- Empty state -->
           <div v-if="wishlists.length === 0 && !showAddForm" class="text-center py-16 px-4">
-            <p class="text-4xl mb-4" aria-hidden="true">🎁</p>
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">No wishlists yet</h2>
-            <p class="text-sm text-gray-500">Create your first wishlist and share it with anyone via URL — no account needed.</p>
+            <p class="font-display text-6xl font-light text-terra mb-4 leading-none opacity-20" aria-hidden="true">✦</p>
+            <h2 class="font-display text-2xl font-medium text-ink mb-2">No wishlists yet</h2>
+            <p class="text-sm text-ink-muted leading-relaxed">Create your first wishlist and share it with anyone via URL — no account needed.</p>
           </div>
 
           <!-- Wishlists -->
@@ -188,14 +188,14 @@ async function copyUrl() {
             />
           </div>
 
-          <!-- Add wishlist form -->
+          <!-- Add wishlist form (mobile) -->
           <div v-if="showAddForm" class="mt-4">
             <form
               @submit.prevent="handleAddWishlist"
-              class="bg-white rounded-xl border border-violet-200 p-4 shadow-sm"
+              class="bg-white rounded-2xl border border-cream-border p-4 shadow-sm"
               aria-label="Create a new wishlist"
             >
-              <label for="new-wishlist-name-mobile" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="new-wishlist-name-mobile" class="block text-xs font-medium text-ink-subtle uppercase tracking-wide mb-1.5">
                 Wishlist name <span aria-hidden="true">*</span><span class="sr-only">(required)</span>
               </label>
               <input
@@ -205,89 +205,24 @@ async function copyUrl() {
                 type="text"
                 required
                 placeholder="e.g. Birthday, Christmas…"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                class="w-full px-3 py-2.5 border border-cream-border rounded-xl text-sm bg-cream text-ink focus:outline-none focus:ring-2 focus:ring-terra focus:border-terra transition-colors placeholder:text-ink-subtle"
               />
               <div class="flex gap-2 mt-3">
-                <button type="submit" class="flex-1 py-2 px-4 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500">
+                <button type="submit" class="flex-1 py-2.5 px-4 bg-terra text-white text-sm font-medium rounded-xl hover:bg-terra-deep transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terra">
                   Create
                 </button>
-                <button type="button" @click="cancelAdd" class="py-2 px-4 text-gray-600 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400">
+                <button type="button" @click="cancelAdd" class="py-2.5 px-4 text-ink-muted text-sm font-medium rounded-xl border border-cream-border hover:bg-cream-muted transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-subtle">
                   Cancel
                 </button>
               </div>
             </form>
           </div>
 
-          <!-- Add wishlist button -->
+          <!-- Add wishlist button (mobile) -->
           <button
             v-if="!showAddForm"
             @click="openAddForm"
-            class="mt-4 w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 text-sm hover:border-violet-400 hover:text-violet-600 transition-colors flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
-            aria-label="Add a new wishlist"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            Add a wishlist
-          </button>
-        </div>
-      </div>
-
-      <!-- Desktop layout -->
-      <!-- Sidebar -->
-      <nav
-        aria-label="Wishlists"
-        class="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 overflow-hidden flex-shrink-0"
-      >
-        <div class="flex-1 overflow-y-auto p-3 space-y-0.5">
-          <p v-if="wishlists.length === 0" class="text-xs text-gray-400 px-3 py-3 text-center">
-            No wishlists yet.
-          </p>
-          <button
-            v-for="wl in wishlists"
-            :key="wl.id"
-            @click="selectedId = wl.id"
-            class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
-            :class="selectedId === wl.id
-              ? 'bg-violet-50 text-violet-700'
-              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-            :aria-current="selectedId === wl.id ? 'page' : undefined"
-          >
-            <span class="flex-1 truncate">{{ wl.name }}</span>
-            <span
-              class="text-xs tabular-nums flex-shrink-0"
-              :class="selectedId === wl.id ? 'text-violet-400' : 'text-gray-400'"
-            >
-              {{ wl.wishes.length }}
-            </span>
-          </button>
-        </div>
-
-        <!-- Add wishlist (bottom of sidebar) -->
-        <div class="flex-shrink-0 border-t border-gray-200 p-3">
-          <form v-if="showAddForm" @submit.prevent="handleAddWishlist" aria-label="Create a new wishlist" class="space-y-2">
-            <input
-              ref="addInput"
-              v-model="newWishlistName"
-              type="text"
-              required
-              placeholder="Wishlist name…"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-              aria-label="New wishlist name"
-            />
-            <div class="flex gap-2">
-              <button type="submit" class="flex-1 py-1.5 px-3 bg-violet-600 text-white text-xs font-medium rounded-lg hover:bg-violet-700 transition-colors">
-                Create
-              </button>
-              <button type="button" @click="cancelAdd" class="py-1.5 px-3 text-gray-600 text-xs font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
-                Cancel
-              </button>
-            </div>
-          </form>
-          <button
-            v-else
-            @click="openAddForm"
-            class="w-full py-2 text-sm text-violet-600 hover:text-violet-700 flex items-center justify-center gap-1.5 rounded-lg hover:bg-violet-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+            class="mt-4 w-full py-3 rounded-2xl text-terra text-sm font-medium hover:bg-terra-pale transition-colors flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-terra border-2 border-dashed border-cream-border hover:border-terra"
             aria-label="Add a new wishlist"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -296,16 +231,81 @@ async function copyUrl() {
             New wishlist
           </button>
         </div>
+      </div>
+
+      <!-- Desktop Sidebar -->
+      <nav
+        aria-label="Wishlists"
+        class="hidden md:flex flex-col w-60 bg-cream-muted border-r border-cream-border overflow-hidden flex-shrink-0"
+      >
+        <!-- New wishlist (top) -->
+        <div class="flex-shrink-0 border-b border-cream-border p-3">
+          <form v-if="showAddForm" @submit.prevent="handleAddWishlist" aria-label="Create a new wishlist" class="space-y-2">
+            <input
+              ref="addInput"
+              v-model="newWishlistName"
+              type="text"
+              required
+              placeholder="Wishlist name…"
+              class="w-full px-3 py-2 border border-cream-border rounded-xl text-sm bg-cream text-ink focus:outline-none focus:ring-2 focus:ring-terra focus:border-terra transition-colors placeholder:text-ink-subtle"
+              aria-label="New wishlist name"
+            />
+            <div class="flex gap-2">
+              <button type="submit" class="flex-1 py-1.5 px-3 bg-terra text-white text-xs font-medium rounded-lg hover:bg-terra-deep transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terra">
+                Create
+              </button>
+              <button type="button" @click="cancelAdd" class="py-1.5 px-3 text-ink-muted text-xs font-medium rounded-lg border border-cream-border hover:bg-cream transition-colors">
+                Cancel
+              </button>
+            </div>
+          </form>
+          <button
+            v-else
+            @click="openAddForm"
+            class="w-full py-2 text-sm text-terra font-medium hover:text-terra-deep flex items-center justify-center gap-1.5 rounded-xl hover:bg-terra-pale transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terra"
+            aria-label="Add a new wishlist"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            New wishlist
+          </button>
+        </div>
+
+        <!-- Wishlist nav list -->
+        <div class="flex-1 overflow-y-auto py-2 px-2">
+          <p v-if="wishlists.length === 0" class="text-xs text-ink-subtle px-3 py-4 text-center">
+            No wishlists yet.
+          </p>
+          <button
+            v-for="wl in wishlists"
+            :key="wl.id"
+            @click="selectedId = wl.id"
+            class="w-full text-left px-3 py-2.5 rounded-r-xl mb-0.5 text-sm flex items-center gap-2 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-terra border-l-2"
+            :class="selectedId === wl.id
+              ? 'bg-cream border-terra text-ink font-medium shadow-sm'
+              : 'border-transparent text-ink-muted hover:bg-cream hover:text-ink font-normal'"
+            :aria-current="selectedId === wl.id ? 'page' : undefined"
+          >
+            <span class="flex-1 truncate">{{ wl.name }}</span>
+            <span
+              class="text-xs tabular-nums flex-shrink-0"
+              :class="selectedId === wl.id ? 'text-terra' : 'text-ink-subtle'"
+            >
+              {{ wl.wishes.length }}
+            </span>
+          </button>
+        </div>
       </nav>
 
       <!-- Desktop content panel -->
-      <div class="hidden md:flex flex-1 overflow-y-auto">
-        <div class="w-full max-w-2xl mx-auto p-6">
+      <div class="hidden md:flex flex-1 overflow-y-auto bg-cream">
+        <div class="w-full max-w-2xl mx-auto p-8">
           <!-- No wishlists -->
-          <div v-if="wishlists.length === 0" class="text-center py-16 px-4">
-            <p class="text-4xl mb-4" aria-hidden="true">🎁</p>
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">No wishlists yet</h2>
-            <p class="text-sm text-gray-500">Create your first wishlist using the sidebar.</p>
+          <div v-if="wishlists.length === 0" class="text-center py-20 px-4">
+            <p class="font-display text-8xl font-light text-terra opacity-20 leading-none mb-6" aria-hidden="true">✦</p>
+            <h2 class="font-display text-4xl font-medium text-ink mb-3">Your lists await.</h2>
+            <p class="text-sm text-ink-muted leading-relaxed">Create a wishlist using the sidebar and share it with anyone.</p>
           </div>
 
           <!-- Selected wishlist -->

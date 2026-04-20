@@ -30,7 +30,7 @@ function handleSubmit() {
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-3" aria-label="Add a new wish">
     <div>
-      <label :for="`${formId}-name`" class="block text-xs font-medium text-gray-600 mb-1">
+      <label :for="`${formId}-name`" class="block text-xs font-medium text-ink-subtle uppercase tracking-wide mb-1">
         Name <span aria-hidden="true">*</span><span class="sr-only">(required)</span>
       </label>
       <input
@@ -40,31 +40,31 @@ function handleSubmit() {
         required
         autofocus
         placeholder="What do you wish for?"
-        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+        class="w-full px-3 py-2.5 text-sm border border-cream-border rounded-xl bg-cream text-ink focus:outline-none focus:ring-2 focus:ring-terra focus:border-terra transition-colors placeholder:text-ink-subtle"
       />
     </div>
 
     <div v-if="features.links">
-      <label :for="`${formId}-link`" class="block text-xs font-medium text-gray-600 mb-1">
-        Link <span class="text-gray-400">(optional)</span>
+      <label :for="`${formId}-link`" class="block text-xs font-medium text-ink-subtle uppercase tracking-wide mb-1">
+        Link <span class="normal-case text-ink-subtle">(optional)</span>
       </label>
       <input
         :id="`${formId}-link`"
         v-model="link"
         type="url"
-        placeholder="https://..."
-        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+        placeholder="https://…"
+        class="w-full px-3 py-2.5 text-sm border border-cream-border rounded-xl bg-cream text-ink focus:outline-none focus:ring-2 focus:ring-terra focus:border-terra transition-colors placeholder:text-ink-subtle"
       />
     </div>
 
     <div v-if="features.priority">
-      <label :for="`${formId}-priority`" class="block text-xs font-medium text-gray-600 mb-1">
-        Priority <span class="text-gray-400">(optional)</span>
+      <label :for="`${formId}-priority`" class="block text-xs font-medium text-ink-subtle uppercase tracking-wide mb-1">
+        Priority <span class="normal-case text-ink-subtle">(optional)</span>
       </label>
       <select
         :id="`${formId}-priority`"
         v-model="priority"
-        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white"
+        class="w-full px-3 py-2.5 text-sm border border-cream-border rounded-xl bg-cream text-ink focus:outline-none focus:ring-2 focus:ring-terra focus:border-terra transition-colors"
       >
         <option value="">No priority</option>
         <option value="high">High</option>
@@ -76,14 +76,14 @@ function handleSubmit() {
     <div class="flex gap-2 pt-1">
       <button
         type="submit"
-        class="flex-1 py-2 px-4 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 transition-colors"
+        class="flex-1 py-2.5 px-4 bg-terra text-white text-sm font-medium rounded-xl hover:bg-terra-deep transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terra"
       >
         Add wish
       </button>
       <button
         type="button"
         @click="emit('cancel')"
-        class="py-2 px-4 text-gray-600 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+        class="py-2.5 px-4 text-ink-muted text-sm font-medium rounded-xl border border-cream-border hover:bg-cream-muted transition-colors"
       >
         Cancel
       </button>

@@ -35,7 +35,9 @@ function encode(wishlists) {
 
 function decode(str) {
   try {
-    return expand(JSON.parse(LZString.decompressFromEncodedURIComponent(str)))
+    const decompressed = LZString.decompressFromEncodedURIComponent(str)
+    if (!decompressed) return null
+    return expand(JSON.parse(decompressed))
   } catch {
     return null
   }
@@ -58,7 +60,7 @@ function saveToUrl(wishlists) {
 export function useWishlists() {
   const wishlists = ref(loadFromUrl())
 
-  watch(wishlists, (val) => saveToUrl(val), { deep: true })
+  watch(wishlists, (val) => saveToUrl(val), { deep: true, flush: 'sync' })
 
   function addWishlist(name) {
     wishlists.value.push({ id: uid(), name, wishes: [] })
